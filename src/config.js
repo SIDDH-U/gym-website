@@ -13,6 +13,7 @@ export const CONFIG = {
   // -----------------------------------------------------------------------
   brand: {
     name: "IRONFORGE",
+    siteUrl: import.meta.env.VITE_SITE_URL || "https://gym-three-smoky.vercel.app",
     tagline: "STRONGER MEN. A BETTER TOMORROW.",
     overline: "TRAIN HARD. STAY DISCIPLINED. BECOME UNSTOPPABLE.",
     established: "2016",
