@@ -1,0 +1,512 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-black: #0A0A0A;
+    --bg-charcoal: #161616;
+    --bg-gunmetal: #2B2F33;
+    --bg-steel: #1C2024;
+    --text-white: #F2F2F0;
+    --text-muted: #C9CCCF;
+    --accent-orange: #E8590C;
+    --accent-orange-glow: #FF6B1A;
+    --accent-orange-light: #FFA066;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    background-color: #0A0A0A;
+    color: #F2F2F0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #0A0A0A;
+    color: #F2F2F0;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100svh;
+    overscroll-behavior-y: none;
+  }
+
+  button, a {
+    touch-action: manipulation;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2B2F33;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #E8590C;
+  }
+}
+
+/* Typography Classes */
+.font-display {
+  font-family: 'Bebas Neue', 'Anton', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.font-heading {
+  font-family: 'Anton', 'Bebas Neue', Impact, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.text-stroke-subtle {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.08);
+  color: transparent;
+}
+
+/* Static Film Grain Overlay (Small Tiled Static Image, Never Animated) */
+.film-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+/* Hide scrollbars for swipe carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area support for iOS */
+.safe-top {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* Below-the-fold content visibility optimization */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
+}
+
+/* ------------------------------------------------------------------ */
+/* OFFSCREEN ANIMATION PAUSING (via useSectionVisibility data-visible)*/
+/* ------------------------------------------------------------------ */
+[data-visible="false"] *,
+[data-visible="false"]::before,
+[data-visible="false"]::after {
+  animation-play-state: paused !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* GPU COMPOSITOR-FRIENDLY KEYFRAMES (ONLY transform & opacity)       */
+/* ------------------------------------------------------------------ */
+
+/* Light Sweep across Buttons (Oversized Pseudo-element using translateX) */
+@keyframes lightSweepTransform {
+  0% {
+    transform: translate3d(-160%, 0, 0) skewX(-25deg);
+  }
+  25%, 100% {
+    transform: translate3d(260%, 0, 0) skewX(-25deg);
+  }
+}
+
+/* Glow Opacity Pulse for Primary Buttons (Modulates pseudo-element opacity only) */
+@keyframes glowOpacityPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.btn-primary-sweep {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Backing Glow Layer animated strictly by opacity */
+.btn-primary-sweep::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(circle at center, rgba(232, 89, 12, 0.7) 0%, rgba(232, 89, 12, 0) 75%);
+  border-radius: inherit;
+  z-index: -1;
+  animation: glowOpacityPulse 3.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Light Streak animated strictly by translate3d */
+.btn-primary-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: lightSweepTransform 3.2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Forge-Heat Text Glow Flicker (Animates opacity only) */
+@keyframes textGlowFlicker {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  14% {
+    opacity: 0.4;
+  }
+  28% {
+    opacity: 0.95;
+  }
+  32% {
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 0.35;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  78% {
+    opacity: 0.45;
+  }
+  82% {
+    opacity: 0.88;
+  }
+}
+
+.text-glow-flicker {
+  animation: textGlowFlicker 4s infinite ease-in-out;
+  will-change: opacity;
+}
+
+/* Arrow nudge loop using translate3d */
+@keyframes arrowNudge {
+  0%, 100% {
+    transform: translate3d(0px, 0, 0);
+  }
+  50% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.animate-arrow-nudge {
+  animation: arrowNudge 1.6s infinite ease-in-out;
+}
+
+/* Outlined Button: Travelling Conic-Gradient Light on Border (Pre-rendered gradient rotated via transform) */
+.btn-outline-travel {
+  position: relative;
+  background: #141618;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-outline-travel::before {
+  content: '';
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 280deg,
+    #E8590C 330deg,
+    #FFA066 360deg
+  );
+  animation: rotateBorder 3.5s linear infinite;
+  z-index: -2;
+  will-change: transform;
+}
+
+.btn-outline-travel::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+  background: #141618;
+  border-radius: 3px;
+  z-index: -1;
+  transition: background 0.2s ease;
+}
+
+.btn-outline-travel:hover::after {
+  background: #1D2125;
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(360deg);
+  }
+}
+
+/* Heartbeat Pulse for Sticky Button (Scale only + opacity glow) */
+@keyframes heartbeatScale {
+  0%, 100% {
+    transform: scale3d(1, 1, 1);
+  }
+  14% {
+    transform: scale3d(1.025, 1.025, 1);
+  }
+  28% {
+    transform: scale3d(1, 1, 1);
+  }
+  42% {
+    transform: scale3d(1.035, 1.035, 1);
+  }
+  70% {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.animate-heartbeat {
+  position: relative;
+  animation: heartbeatScale 2.8s infinite ease-in-out;
+}
+
+.animate-heartbeat::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: radial-gradient(circle at center, rgba(232, 89, 12, 0.75) 0%, rgba(232, 89, 12, 0) 80%);
+  border-radius: inherit;
+  z-index: -1;
+  animation: glowOpacityPulse 2.8s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Subtle Float for Social Icons and Badges */
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0);
+  }
+  50% {
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+.animate-subtle-float {
+  animation: floatSubtle 3s infinite ease-in-out;
+}
+
+/* Subtle Ken Burns Zoom */
+@keyframes kenBurnsSubtle {
+  0%, 100% {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.03, 1.03, 1);
+  }
+}
+
+.animate-ken-burns {
+  animation: kenBurnsSubtle 8s infinite ease-in-out;
+}
+
+/* Giant Outlined IRON FORGE Background Drift */
+@keyframes ironforgeDrift {
+  0%, 100% {
+    transform: translate3d(-20px, 0, 0);
+  }
+  50% {
+    transform: translate3d(20px, 0, 0);
+  }
+}
+
+.animate-ironforge-drift {
+  animation: ironforgeDrift 20s infinite ease-in-out;
+  will-change: transform;
+}
+
+/* Pulsing Ember Radial Glow */
+@keyframes emberGlowPulse {
+  0%, 100% {
+    transform: scale3d(1, 1, 1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale3d(1.12, 1.12, 1);
+    opacity: 0.6;
+  }
+}
+
+.animate-ember-glow {
+  animation: emberGlowPulse 4.5s infinite ease-in-out;
+}
+
+/* Scroll Cue Bounce */
+@keyframes scrollBounce {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
+.animate-scroll-bounce {
+  animation: scrollBounce 1.5s infinite ease-in-out;
+}
+
+/* ECG Line Flow */
+@keyframes ecgFlow {
+  0% {
+    stroke-dashoffset: 1200;
+  }
+  100% {
+    stroke-dashoffset: -1200;
+  }
+}
+
+/* Continuous Section Background Light Sweep */
+@keyframes sectionLightSweep {
+  0% {
+    transform: translate3d(-100%, 0, 0) skewX(-25deg);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0) skewX(-25deg);
+  }
+}
+
+.animate-section-sweep {
+  animation: sectionLightSweep 8s infinite ease-in-out;
+}
+
+/* ------------------------------------------------------------------ */
+/* SINGLE TICKER MARQUEE (SLOW & SMOOTH, PURE TRANSLATE3D)            */
+/* ------------------------------------------------------------------ */
+@keyframes tickerLoop {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker-smooth {
+  display: flex;
+  width: max-content;
+  animation: tickerLoop 45s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker-smooth:hover {
+  animation-play-state: paused;
+}
+
+/* ------------------------------------------------------------------ */
+/* CARD CONTINUOUS BORDER TRAVEL (Pre-rendered Conic Layer Rotated)   */
+/* ------------------------------------------------------------------ */
+.card-border-glow {
+  position: relative;
+  background: #141618;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.card-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 290deg,
+    #E8590C 335deg,
+    #FF8A3D 360deg
+  );
+  animation: rotateBorder 5s linear infinite;
+  z-index: -2;
+  will-change: transform;
+}
+
+.card-border-glow::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: #141618;
+  border-radius: 7px;
+  z-index: -1;
+}
+
+/* Moving Border Beam for Most Popular Pricing Card (Rotated Oversized Conic Layer, No Repaint) */
+.border-beam-orange {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.border-beam-orange::before {
+  content: '';
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 260deg,
+    #FFA066 310deg,
+    #E8590C 360deg
+  );
+  animation: rotateBorder 4s linear infinite;
+  z-index: -2;
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------------ */
+/* PERFORMANCE TIER OVERRIDES                                         */
+/* ------------------------------------------------------------------ */
+[data-perf-tier="low"] .ecg-line {
+  display: none !important;
+}
+
+[data-perf-tier="low"] .card-border-glow::before,
+[data-perf-tier="low"] .btn-outline-travel::before,
+[data-perf-tier="low"] .border-beam-orange::before {
+  animation-duration: 8s !important;
+}
+
+/* ------------------------------------------------------------------ */
+/* REDUCED MOTION OVERRIDE                                            */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
